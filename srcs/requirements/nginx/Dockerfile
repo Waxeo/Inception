@@ -1,14 +1,12 @@
 FROM debian:bullseye
 
-RUN apt update
+EXPOSE 443
 
-RUN apt install nginx -y
+RUN		apt update && apt install -y --no-install-recommends --no-install-suggests \
+		nginx \
+		openssl && \
+		rm -rf /var/lib/apt/lists/*
 
-RUN apt install vim -y 
-
-RUN apt install curl -y
-
-RUN apt install openssl -y 
 
 RUN mkdir -p /etc/nginx/ssl
 
@@ -17,9 +15,15 @@ RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout /etc/ngin
 RUN mkdir -p /var/run/nginx
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY	conf/server.conf	/etc/nginx/conf.d/
 
-RUN chmod 755 /var/www/html
+RUN		echo "\tserver name mgauvrit.42.fr;\n\
+			\tssl_certificate /etc/nginx/ssl/inception.crt;\n\
+			\tssl_certificate_key /etc/nginx/ssl/inception.key;\n\
+			}" >> /etc/nginx/conf.d/server.conf
 
-RUN chown -R www-data:www-data /var/www/html
+RUN		mkdir -p /var/www/
+
+RUN chown -R www-data:www-data /var/www/
 
 CMD [ "nginx", "-g", "daemon off;" ]

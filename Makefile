@@ -1,11 +1,15 @@
-Instructions de base : Les instructions de base d'un Dockerfile incluent FROM, RUN, COPY, ADD, CMD, ENTRYPOINT, etc. Chacune de ces instructions effectue une action spécifique lors de la construction de l'image.
+all: up
 
-FROM : Cette instruction spécifie l'image de base à utiliser. Toutes les autres instructions du Dockerfile seront exécutées sur cette base.
+up:
+	docker-compose -f srcs/docker-compose.yml up --build
 
-RUN : Cette instruction exécute des commandes dans un nouveau conteneur et enregistre le résultat.
+stop:
+	docker-compose -f srcs/docker-compose.yml stop
 
-COPY et ADD : Ces instructions copient des fichiers et des répertoires depuis l'hôte dans l'image Docker.
+down:
+	docker-compose -f srcs/docker-compose.yml down
 
-CMD : Cette instruction définit la commande par défaut à exécuter lorsque le conteneur démarre.
+start:
+	docker-compose -f srcs/docker-compose.yml start
 
-ENTRYPOINT : Cette instruction permet de configurer une commande à exécuter au démarrage du conteneur, en remplacement de la commande spécifiée par CMD
+.PHONY: up stop down start
